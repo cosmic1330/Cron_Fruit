@@ -4,50 +4,36 @@ const remove = require("./db/methods/remove");
 const express = require("express");
 
 // cron
-var job1 = new CronJob(
-  "0 0 12 * * *",
-  function () {
-    remove();
-  },
-  null,
-  true,
-  "Asia/Taipei"
-);
-job1.start();
+let removeArr = ["0 0 8 * * *", "0 0 11 * * *"];
+let insertArr = ["0 1 8 * * *", "0 1 11 * * *"];
 
-var job2 = new CronJob(
-  "0 1 12 * * *",
-  function () {
-    insertData();
-  },
-  null,
-  true,
-  "Asia/Taipei"
-);
-job2.start();
+removeArr.forEach((element) => {
+  var job = new CronJob(
+    element,
+    async function () {
+      await remove();
+      console.log("remove");
+    },
+    null,
+    true,
+    "Asia/Taipei"
+  );
+  job.start();
+});
 
-
-var job3 = new CronJob(
-  "0 0 9 * * *",
-  function () {
-    remove();
-  },
-  null,
-  true,
-  "Asia/Taipei"
-);
-job3.start();
-
-var job4 = new CronJob(
-  "0 1 9 * * *",
-  function () {
-    insertData();
-  },
-  null,
-  true,
-  "Asia/Taipei"
-);
-job4.start();
+insertArr.forEach((element) => {
+  var job = new CronJob(
+    element,
+    async function () {
+      await insertData();
+      console.log("insert");
+    },
+    null,
+    true,
+    "Asia/Taipei"
+  );
+  job.start();
+});
 
 // server
 const app = express();
